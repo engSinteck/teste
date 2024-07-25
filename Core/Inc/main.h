@@ -57,6 +57,7 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define LWIP_RAM_HEAP_POINTER 0x2007C200
 
 /* USER CODE BEGIN Private defines */
 

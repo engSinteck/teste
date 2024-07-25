@@ -98,9 +98,6 @@ LWIP_MEMPOOL_DECLARE(RX_POOL, ETH_RX_BUFFER_CNT, sizeof(RxBuff_t), "Zero-copy RX
 /* Variable Definitions */
 static uint8_t RxAllocStatus;
 
-__IO uint32_t TxPkt = 0;
-__IO uint32_t RxPkt = 0;
-
 #if defined ( __ICCARM__ ) /*!< IAR Compiler */
 
 #pragma location=0x2007C000
