@@ -259,7 +259,6 @@ void PeriphCommonClock_Config(void)
 /* USER CODE END 4 */
 
  /* MPU Configuration */
-
 void MPU_Config(void)
 {
   MPU_Region_InitTypeDef MPU_InitStruct = {0};
