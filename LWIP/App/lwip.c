@@ -29,7 +29,7 @@
 #include <string.h>
 
 /* USER CODE BEGIN 0 */
-
+#include "usart.h"
 /* USER CODE END 0 */
 /* Private function prototypes -----------------------------------------------*/
 static void ethernet_link_status_updated(struct netif *netif);
@@ -130,11 +130,13 @@ static void ethernet_link_status_updated(struct netif *netif)
   if (netif_is_up(netif))
   {
 /* USER CODE BEGIN 5 */
+     HAL_UART_Transmit(&huart6, (uint8_t*)"UP\r\n", 4, HAL_MAX_DELAY); // send message via UART
 /* USER CODE END 5 */
   }
   else /* netif is down */
   {
 /* USER CODE BEGIN 6 */
+	  HAL_UART_Transmit(&huart6, (uint8_t*)"DOWN\r\n", 6, HAL_MAX_DELAY); // send message via UART
 /* USER CODE END 6 */
   }
 }

@@ -57,6 +57,7 @@
 #define MEM_ALIGNMENT 4
 /*----- Default Value for MEM_SIZE: 1600 ---*/
 #define MEM_SIZE 10*1024
+#define LWIP_RAM_HEAP_POINTER 0x2007C200
 /*----- Default Value for MEMP_NUM_TCP_PCB_LISTEN: 8 ---*/
 #define MEMP_NUM_TCP_PCB_LISTEN 10
 /*----- Default Value for MEMP_NUM_TCP_SEG: 16 ---*/
@@ -149,7 +150,7 @@
 #define CHECKSUM_CHECK_ICMP6 0
 /*-----------------------------------------------------------------------------*/
 /* USER CODE BEGIN 1 */
-
+#define LWIP_DEBUG 1
 /* USER CODE END 1 */
 
 #ifdef __cplusplus
