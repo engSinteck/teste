@@ -44,10 +44,10 @@ _Min_Stack_Size = 0x400; /* required amount of stack */
 /* Memories definition */
 MEMORY
 {
-  FLASH    (rx)    : ORIGIN = 0x8000000,   LENGTH = 2048K
-  RAM    (xrw)    : ORIGIN = 0x20000000,   LENGTH = 496K
-  Memory_B1(rw)   : ORIGIN = 0x2007C000, LENGTH = 0xA0
-  Memory_B2(rw)   : ORIGIN = 0x2007C0A0, LENGTH = 0xA0
+  FLASH    (rx)   : ORIGIN = 0x8000000,   LENGTH = 2048K
+  RAM    (xrw)    : ORIGIN = 0x20000000,  LENGTH = 496K
+  Memory_B1(rw)   : ORIGIN = 0x2007C000,  LENGTH = 0xA0
+  Memory_B2(rw)   : ORIGIN = 0x2007C0A0,  LENGTH = 0xA0
 }
 
 /* Sections */
@@ -160,7 +160,6 @@ SECTIONS
     *(.bss)
     *(.bss*)
     *(COMMON)
-    
     /* ETH_CODE: add placement of RX buffer. STM32H72x/H73x has small D2 RAM, so we need to put it there.
      * (NOLOAD) attribute used for .bss section to avoid linker warning (.bss initialized by startup code)
      */

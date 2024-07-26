@@ -21,6 +21,7 @@
 #include "cmsis_os.h"
 #include "crc.h"
 #include "dma.h"
+#include "dma2d.h"
 #include "fatfs.h"
 #include "i2c.h"
 #include "lwip.h"
@@ -142,6 +143,7 @@ int main(void)
   MX_RNG_Init();
   MX_RTC_Init();
   MX_SPI3_Init();
+  MX_DMA2D_Init();
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim12);
 
@@ -259,6 +261,7 @@ void PeriphCommonClock_Config(void)
 /* USER CODE END 4 */
 
  /* MPU Configuration */
+
 void MPU_Config(void)
 {
   MPU_Region_InitTypeDef MPU_InitStruct = {0};
@@ -268,7 +271,7 @@ void MPU_Config(void)
 
   /** Initializes and configures the Region and the memory to be protected
   */
-  MPU_InitStruct.Enable = MPU_REGION_ENABLE;
+  MPU_InitStruct.Enable = MPU_REGION_DISABLE;
   MPU_InitStruct.Number = MPU_REGION_NUMBER0;
   MPU_InitStruct.BaseAddress = 0x0;
   MPU_InitStruct.Size = MPU_REGION_SIZE_4GB;
@@ -283,13 +286,45 @@ void MPU_Config(void)
   HAL_MPU_ConfigRegion(&MPU_InitStruct);
 
   /** Initializes and configures the Region and the memory to be protected
-  */
+    */
   MPU_InitStruct.Enable = MPU_REGION_ENABLE;
   MPU_InitStruct.Number = MPU_REGION_NUMBER1;
   MPU_InitStruct.BaseAddress = 0x2007C000;
   MPU_InitStruct.Size = MPU_REGION_SIZE_16KB;
   MPU_InitStruct.SubRegionDisable = 0x0;
   MPU_InitStruct.TypeExtField = MPU_TEX_LEVEL1;
+  MPU_InitStruct.AccessPermission = MPU_REGION_FULL_ACCESS;
+  MPU_InitStruct.DisableExec = MPU_INSTRUCTION_ACCESS_DISABLE;
+  MPU_InitStruct.IsShareable = MPU_ACCESS_SHAREABLE;
+  MPU_InitStruct.IsCacheable = MPU_ACCESS_NOT_CACHEABLE;
+  MPU_InitStruct.IsBufferable = MPU_ACCESS_NOT_BUFFERABLE;
+
+  HAL_MPU_ConfigRegion(&MPU_InitStruct);
+
+  /** Initializes and configures the Region and the memory to be protected
+    */
+  MPU_InitStruct.Enable = MPU_REGION_ENABLE;
+  MPU_InitStruct.Number = MPU_REGION_NUMBER2;
+  MPU_InitStruct.BaseAddress = 0x2007C000;
+  MPU_InitStruct.Size = MPU_REGION_SIZE_512B;
+  MPU_InitStruct.SubRegionDisable = 0x0;
+  MPU_InitStruct.TypeExtField = MPU_TEX_LEVEL0;
+  MPU_InitStruct.AccessPermission = MPU_REGION_FULL_ACCESS;
+  MPU_InitStruct.DisableExec = MPU_INSTRUCTION_ACCESS_DISABLE;
+  MPU_InitStruct.IsShareable = MPU_ACCESS_SHAREABLE;
+  MPU_InitStruct.IsCacheable = MPU_ACCESS_NOT_CACHEABLE;
+  MPU_InitStruct.IsBufferable = MPU_ACCESS_BUFFERABLE;
+
+  HAL_MPU_ConfigRegion(&MPU_InitStruct);
+
+  /** Initializes and configures the Region and the memory to be protected
+    */
+  MPU_InitStruct.Enable = MPU_REGION_ENABLE;
+  MPU_InitStruct.Number = MPU_REGION_NUMBER3;
+  MPU_InitStruct.BaseAddress = 0x60000000;
+  MPU_InitStruct.Size = MPU_REGION_SIZE_64KB;
+  MPU_InitStruct.SubRegionDisable = 0x0;
+  MPU_InitStruct.TypeExtField = MPU_TEX_LEVEL0;
   MPU_InitStruct.AccessPermission = MPU_REGION_FULL_ACCESS;
   MPU_InitStruct.DisableExec = MPU_INSTRUCTION_ACCESS_DISABLE;
   MPU_InitStruct.IsShareable = MPU_ACCESS_NOT_SHAREABLE;
@@ -299,38 +334,34 @@ void MPU_Config(void)
   HAL_MPU_ConfigRegion(&MPU_InitStruct);
 
   /** Initializes and configures the Region and the memory to be protected
-  */
-  MPU_InitStruct.Number = MPU_REGION_NUMBER2;
-  MPU_InitStruct.Size = MPU_REGION_SIZE_512B;
+    */
+  MPU_InitStruct.Enable = MPU_REGION_ENABLE;
+  MPU_InitStruct.Number = MPU_REGION_NUMBER4;
+  MPU_InitStruct.BaseAddress = 0x60010000;
+  MPU_InitStruct.Size = MPU_REGION_SIZE_64KB;
+  MPU_InitStruct.SubRegionDisable = 0x0;
   MPU_InitStruct.TypeExtField = MPU_TEX_LEVEL0;
-  MPU_InitStruct.IsShareable = MPU_ACCESS_SHAREABLE;
-  MPU_InitStruct.IsBufferable = MPU_ACCESS_BUFFERABLE;
-
-  HAL_MPU_ConfigRegion(&MPU_InitStruct);
-
-  /** Initializes and configures the Region and the memory to be protected
-  */
-  MPU_InitStruct.Number = MPU_REGION_NUMBER3;
-  MPU_InitStruct.BaseAddress = 0x60000000;
-  MPU_InitStruct.Size = MPU_REGION_SIZE_4KB;
-  MPU_InitStruct.DisableExec = MPU_INSTRUCTION_ACCESS_ENABLE;
+  MPU_InitStruct.AccessPermission = MPU_REGION_FULL_ACCESS;
+  MPU_InitStruct.DisableExec = MPU_INSTRUCTION_ACCESS_DISABLE;
   MPU_InitStruct.IsShareable = MPU_ACCESS_NOT_SHAREABLE;
+  MPU_InitStruct.IsCacheable = MPU_ACCESS_NOT_CACHEABLE;
   MPU_InitStruct.IsBufferable = MPU_ACCESS_NOT_BUFFERABLE;
 
   HAL_MPU_ConfigRegion(&MPU_InitStruct);
 
   /** Initializes and configures the Region and the memory to be protected
-  */
-  MPU_InitStruct.Number = MPU_REGION_NUMBER4;
-  MPU_InitStruct.BaseAddress = 0x60010000;
-
-  HAL_MPU_ConfigRegion(&MPU_InitStruct);
-
-  /** Initializes and configures the Region and the memory to be protected
-  */
+    */
+  MPU_InitStruct.Enable = MPU_REGION_ENABLE;
   MPU_InitStruct.Number = MPU_REGION_NUMBER5;
   MPU_InitStruct.BaseAddress = 0xA0000000;
-  MPU_InitStruct.Size = MPU_REGION_SIZE_16KB;
+  MPU_InitStruct.Size = MPU_REGION_SIZE_64KB;
+  MPU_InitStruct.SubRegionDisable = 0x0;
+  MPU_InitStruct.TypeExtField = MPU_TEX_LEVEL0;
+  MPU_InitStruct.AccessPermission = MPU_REGION_FULL_ACCESS;
+  MPU_InitStruct.DisableExec = MPU_INSTRUCTION_ACCESS_DISABLE;
+  MPU_InitStruct.IsShareable = MPU_ACCESS_NOT_SHAREABLE;
+  MPU_InitStruct.IsCacheable = MPU_ACCESS_NOT_CACHEABLE;
+  MPU_InitStruct.IsBufferable = MPU_ACCESS_NOT_BUFFERABLE;
 
   HAL_MPU_ConfigRegion(&MPU_InitStruct);
 
